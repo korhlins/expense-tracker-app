@@ -2,6 +2,7 @@ package com.collins.expensetrackerapp.service.imp;
 
 import com.collins.expensetrackerapp.dto.CategoryDto;
 import com.collins.expensetrackerapp.entity.Category;
+import com.collins.expensetrackerapp.exception.ResourceNotFoundException;
 import com.collins.expensetrackerapp.mapper.CategoryMapper;
 import com.collins.expensetrackerapp.repository.CategoryRepository;
 import com.collins.expensetrackerapp.service.CategoryService;
@@ -22,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category existingCategory = categoryRepository.findCategoriesByName(categoryDto.name());
         if (existingCategory != null){
-            throw new RuntimeException("category " + existingCategory.getName() + " already exist!");
+            throw new ResourceNotFoundException("category " + existingCategory.getName() + " already exist!");
         }
 
         Category category = CategoryMapper.mapToCategory(categoryDto);
@@ -37,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto findById(Long categoryId){
         Category category = categoryRepository.findById(categoryId).
-                orElseThrow(() -> new RuntimeException("Category does not found with id:" + categoryId));
+                orElseThrow(() -> new ResourceNotFoundException("Category does not found with id:" + categoryId));
         return  CategoryMapper.mapToCategoryDto(category);
     }
 
@@ -57,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long categoryId){
-        CategoryDto retrievedCategory = this.findById(categoryId);
+        this.findById(categoryId);
         categoryRepository.deleteById(categoryId);
     }
 }

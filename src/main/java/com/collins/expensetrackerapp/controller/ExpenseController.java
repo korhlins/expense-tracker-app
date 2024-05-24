@@ -3,8 +3,6 @@ package com.collins.expensetrackerapp.controller;
 import com.collins.expensetrackerapp.dto.ExpenseDto;
 import com.collins.expensetrackerapp.service.ExpenseService;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

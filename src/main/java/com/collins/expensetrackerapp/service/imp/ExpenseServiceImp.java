@@ -4,6 +4,7 @@ package com.collins.expensetrackerapp.service.imp;
 import com.collins.expensetrackerapp.dto.ExpenseDto;
 import com.collins.expensetrackerapp.entity.Category;
 import com.collins.expensetrackerapp.entity.Expense;
+import com.collins.expensetrackerapp.exception.ResourceNotFoundException;
 import com.collins.expensetrackerapp.mapper.ExpenseMapper;
 import com.collins.expensetrackerapp.repository.CategoryRepository;
 import com.collins.expensetrackerapp.repository.ExpenseRepository;
@@ -19,7 +20,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Service
 public class ExpenseServiceImp implements ExpenseService {
-
 
     private ExpenseRepository expenseRepository;
 
@@ -39,7 +39,8 @@ public class ExpenseServiceImp implements ExpenseService {
     @Override
     public ExpenseDto findById(Long expenseId){
 
-       Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new RuntimeException("Expense was not found:" + expenseId));
+       Expense expense = expenseRepository.findById(expenseId)
+               .orElseThrow(() -> new ResourceNotFoundException("Expense was not found with Id:" + expenseId));
 
         return ExpenseMapper.mapToExpenseDto(expense);
     }
@@ -56,7 +57,7 @@ public class ExpenseServiceImp implements ExpenseService {
         ExpenseDto retrievedExpense = this.findById(expenseId);
 
         Category category = categoryRepository.findById(expenseDto.categoryDto().id())
-                .orElseThrow(() -> new RuntimeException("Category not found with Id:" + expenseDto.categoryDto().id()));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with Id:" + expenseDto.categoryDto().id()));
 
         Expense expense = ExpenseMapper.mapToExpense(retrievedExpense);
         expense.setAmount(expenseDto.amount());
